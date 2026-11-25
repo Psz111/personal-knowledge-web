@@ -1,0 +1,47 @@
+Third-party notices for the Personal Knowledge browser edition
+
+DSH Desktop v0.14.0
+Copyright (c) 2026 DataElement
+The workbench uses the desktop release's brand mark.
+https://github.com/dataelement/dsh-desktop/blob/v0.14.0/build/brand-mark.svg
+https://github.com/dataelement/dsh-desktop/blob/v0.14.0/LICENSE
+
+DeepSeek Harness 0.2.2-rc.1
+Copyright (c) 2026 DeepSeek
+The chat renderer uses components, styles and glyphs from
+@deepseek-ai/dsh-client-ui-chat and @deepseek-ai/dsh-client-ui-primitives.
+The browser shell adapts the desktop conversation and sidebar layout.
+The transcript width control is adapted from @deepseek-ai/dsh-client-ui-conversation.
+https://github.com/deepseek-ai/deepseek-harness/tree/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db
+https://github.com/dataelement/dsh-desktop/blob/v0.14.0/THIRD_PARTY_NOTICES.md
+
+React, React DOM and React JSX runtime 18.3.1
+Copyright (c) Facebook, Inc. and its affiliates.
+https://github.com/facebook/react/blob/v18.3.1/LICENSE
+React DOM includes an event-support check credited in its distribution as
+"Modernizr 3.0.0pre (Custom Build) | MIT".
+https://github.com/facebook/react/blob/v18.3.1/packages/react-dom/src/events/isEventSupported.js
+
+clsx 2.1.1
+Copyright (c) Luke Edwards <luke.edwards05@gmail.com> (lukeed.com)
+https://www.npmjs.com/package/clsx/v/2.1.1
+
+MIT License
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

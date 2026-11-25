@@ -6,74 +6,116 @@
   <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light">
-  <title>个人信息助手</title>
-  <link rel="stylesheet" href="./style.css">
-  <script type="module" src="./app.js"></script>
+  <title>个人信息助手 · DSH 工作台</title>
+  <link rel="stylesheet" href="./dsh/renderer.css">
+  <link rel="stylesheet" href="./style.css?v=dsh014">
+  <script defer src="./dsh/react.js"></script>
+  <script defer src="./dsh/react-dom.js"></script>
+  <script type="module" src="./app.js?v=dsh014"></script>
 </head>
 <body>
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon-defs" aria-hidden="true"><defs>
+    <symbol id="icon-folder" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h5l3 3h6a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Zm0 2h18"/></symbol>
+<symbol id="icon-compose" viewBox="0 0 24 24"><path d="M13 4H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-8M17 3l4 4-10 10-5 1 1-5Z"/></symbol>
+<symbol id="icon-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="7.5"/><path d="m16 16 5 5"/></symbol>
+<symbol id="icon-panel" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/></symbol>
+<symbol id="icon-chat" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H4l-1 1V11.5A8.5 8.5 0 0 1 11.5 3h1a8.5 8.5 0 0 1 8.5 8.5Z"/><path d="M8 9h8M8 14h5"/></symbol>
+<symbol id="icon-plus" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></symbol>
+<symbol id="icon-sliders" viewBox="0 0 24 24"><path d="M4 7h4m5 0h7M4 17h9m5 0h2"/><circle cx="10.5" cy="7" r="2.5"/><circle cx="15.5" cy="17" r="2.5"/></symbol>
+<symbol id="icon-stack" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5 9-5Zm-9 9 9 5 9-5m-18 5 9 5 9-5"/></symbol>
+<symbol id="icon-back" viewBox="0 0 24 24"><path d="m11 5-7 7 7 7M4 12h16"/></symbol>
+    <symbol id="icon-send" viewBox="0 0 24 24"><path d="M12 20V4m-7 7 7-7 7 7"/></symbol>
+    <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="icon-bookmark" viewBox="0 0 24 24"><path d="M6 5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16l-6-4-6 4z"/></symbol>
+    <symbol id="desktop-mark" viewBox="0 0 1000 1000"><path fill="currentColor" d="M478.318 218C605.318 218 683.318 287 687.318 404L691.318 472C693.318 525 697.319 556 726.318 574C746.318 587 774.318 585 790.318 562C799.318 550 802.318 539 792.318 534C747.319 513 727.318 472 738.318 428C739.652 420 742.652 418.667 747.318 424C774.318 450 815.318 460 831.318 501C855.318 457 898.318 456 930.318 436C936.318 431.333 939.318 433.333 939.318 442C938.318 496 903.318 535 850.318 547C841.318 570 833.318 592 819.318 622C773.318 723 661.318 782 491.318 782H294.318C161.319 782 74.3183 714 53.3184 592C41.3184 526 38.3184 433 50.3184 375C70.3184 277 113.82 218 234.32 218H478.318ZM571.82 350.5C469.82 333.5 277.82 329.5 164.82 350.5C138.82 355.5 114.318 379 110.318 404C100.318 451 102.318 551 124.318 596C155.318 660 214.319 697 315.318 705C324.318 678 346.319 662 376.318 662C404.318 662 427.318 678 435.318 705C493.318 699 526.318 680 562.318 652C621.318 606 633.749 527.103 633.749 424C633.749 385.144 604.82 355.5 571.82 350.5ZM179.32 264C167.722 264 158.32 273.402 158.32 285C158.32 296.598 167.722 306 179.32 306C190.918 306 200.32 296.598 200.32 285C200.32 273.402 190.918 264 179.32 264ZM245.551 264C233.953 264 224.551 273.402 224.551 285C224.551 296.598 233.953 306 245.551 306C257.149 306 266.551 296.598 266.551 285C266.551 273.402 257.149 264 245.551 264ZM311.782 264C300.184 264 290.782 273.402 290.782 285C290.782 296.598 300.184 306 311.782 306C323.38 306 332.782 296.598 332.782 285C332.782 273.402 323.38 264 311.782 264Z"/></symbol>
+    <symbol id="hero-mark" viewBox="0 0 23.16 17.04"><path fill="currentColor" d="M22.9168 1.43018C22.6713 1.31018 22.5658 1.53918 22.4223 1.65519C22.3733 1.69269 22.3318 1.74169 22.2903 1.78669C21.9317 2.1697 21.5127 2.42121 20.9657 2.39121C20.1657 2.34621 19.4827 2.59771 18.8787 3.20973C18.7502 2.45521 18.3236 2.0047 17.6746 1.71569C17.3351 1.56568 16.9916 1.41518 16.7536 1.08867C16.5876 0.856163 16.5421 0.597155 16.4591 0.341647C16.4061 0.187643 16.3536 0.0301382 16.1761 0.00363739C15.9836 -0.0263635 15.9081 0.135141 15.8326 0.270145C15.5306 0.822162 15.4136 1.43018 15.4251 2.0462C15.4516 3.43174 16.0366 4.53527 17.1991 5.3203C17.3311 5.4103 17.3651 5.5003 17.3236 5.63181C17.2441 5.90231 17.1501 6.16482 17.0671 6.43533C17.0141 6.60784 16.9351 6.64584 16.7501 6.57033C16.1121 6.30383 15.5611 5.90931 15.074 5.4328C14.2475 4.63328 13.5 3.75075 12.568 3.05973C12.349 2.89822 12.13 2.74822 11.9034 2.60522C10.9524 1.68169 12.028 0.923165 12.277 0.833162C12.5375 0.739159 12.3675 0.41615 11.5259 0.42015C10.6844 0.42365 9.91439 0.705658 8.93286 1.08117C8.78935 1.13767 8.63835 1.17867 8.48384 1.21267C7.59332 1.04367 6.66829 1.00617 5.70226 1.11517C3.88321 1.31768 2.43016 2.1777 1.36213 3.64575C0.0790928 5.4103 -0.222916 7.41536 0.146595 9.50642C0.535106 11.7105 1.66014 13.535 3.38869 14.9616C5.18125 16.4406 7.24581 17.1657 9.60138 17.0266C11.0319 16.9441 12.6245 16.7526 14.421 15.2321C14.874 15.4576 15.3496 15.5476 16.1381 15.6151C16.7456 15.6716 17.3306 15.5851 17.7836 15.4911C18.4931 15.3411 18.4441 14.6841 18.1876 14.5636C16.1081 13.595 16.5646 13.9891 16.1496 13.67C17.2061 12.42 18.8202 10.1979 19.3182 7.17235C19.3672 6.83834 19.4297 6.36783 19.4222 6.09732C19.4182 5.93231 19.4562 5.86831 19.6447 5.84931C20.1657 5.78931 20.6712 5.64681 21.1357 5.3913C22.4833 4.65528 23.0268 3.44624 23.1548 1.9972C23.1738 1.77569 23.1508 1.54668 22.9168 1.43018ZM11.1749 14.4736C9.15936 12.889 8.18184 12.3675 7.77832 12.39C7.40081 12.4125 7.46881 12.8445 7.55182 13.126C7.63882 13.404 7.75182 13.5955 7.91033 13.8396C8.01983 14.0011 8.09533 14.2411 7.80083 14.4216C7.15181 14.8231 6.02327 14.2866 5.97027 14.2601C4.65673 13.4865 3.5587 12.4655 2.78467 11.069C2.03715 9.72493 1.60314 8.28289 1.53164 6.74384C1.51264 6.37233 1.62214 6.24082 1.99215 6.17332C2.47916 6.08332 2.98118 6.06432 3.46769 6.13582C5.52476 6.43633 7.27581 7.35586 8.74385 8.8129C9.58188 9.64243 10.2159 10.634 10.8689 11.6025C11.5634 12.631 12.3105 13.611 13.262 14.4146C13.598 14.6961 13.866 14.9101 14.1225 15.0681C13.349 15.1546 12.058 15.1731 11.1749 14.4746L11.1749 14.4736ZM12.141 8.25988C12.141 8.09488 12.273 7.96338 12.439 7.96338C12.4765 7.96338 12.5105 7.97088 12.541 7.98188C12.5825 7.99688 12.6205 8.01938 12.6505 8.05338C12.7035 8.10588 12.7335 8.18088 12.7335 8.25988C12.7335 8.42489 12.6015 8.55639 12.4355 8.55639C12.2695 8.55639 12.141 8.42489 12.141 8.25988ZM15.1415 9.79893C14.949 9.87793 14.7565 9.94544 14.5715 9.95294C14.2845 9.96794 13.9715 9.85143 13.8015 9.70893C13.5375 9.48742 13.3485 9.36342 13.2695 8.97691C13.2355 8.8119 13.2545 8.55639 13.2845 8.40989C13.3525 8.09438 13.277 7.89187 13.0545 7.70787C12.8735 7.55786 12.643 7.51636 12.39 7.51636C12.2955 7.51636 12.209 7.47486 12.1445 7.44136C12.039 7.38886 11.9519 7.25735 12.035 7.09585C12.0615 7.04335 12.19 6.91584 12.22 6.89334C12.5635 6.69784 12.9595 6.76184 13.326 6.90834C13.6655 7.04735 13.9225 7.30236 14.292 7.66287C14.6695 8.09838 14.7375 8.21838 14.9525 8.54539C15.1225 8.8009 15.277 9.06341 15.3831 9.36392C15.4471 9.55142 15.3641 9.70493 15.1415 9.79893Z"/></symbol>
+  </defs></svg>
   <div class="workbench">
-    <aside class="sidebar" aria-label="工作区导航">
-      <div class="brand"><span class="mark" aria-hidden="true"><i></i><i></i></span><span>个人信息助手</span></div>
+    <aside id="sidebar" class="sidebar" aria-label="工作区导航">
+      <div class="brand">
+        <span class="brand-name"><svg class="brand-mark" aria-hidden="true"><use href="#desktop-mark"></use></svg><span>DSH 工作台</span></span>
+        <button id="sidebar-toggle" class="icon-button" type="button" title="切换侧栏" aria-label="切换侧栏" aria-controls="sidebar" aria-expanded="true"><svg class="icon" aria-hidden="true"><use href="#icon-panel"></use></svg></button>
+      </div>
+      <button id="new-chat" class="new-chat" type="button" aria-label="新建会话" title="新建会话"><svg class="icon" aria-hidden="true"><use href="#icon-compose"></use></svg><span>新建会话</span></button>
       <nav class="navigation" aria-label="主要功能">
-        <button id="new-chat" class="nav-button" type="button"><i class="icon icon-new" aria-hidden="true"></i><span>新对话</span></button>
-        <button id="open-records" class="nav-button" type="button"><i class="icon icon-records" aria-hidden="true"></i><span>我的记录</span></button>
+        <button id="open-records" class="nav-button" type="button" aria-label="我的记录" title="我的记录" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#icon-bookmark"></use></svg><span>我的记录</span></button>
+        <div class="workspace-group">
+          <h2 class="group-heading">工作区</h2>
+          <p class="folder-name"><svg class="icon" aria-hidden="true"><use href="#icon-folder"></use></svg>个人信息助手</p>
+          <button id="active-chat" class="nav-button session-row" type="button" title="当前对话" aria-label="打开当前对话" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#icon-chat"></use></svg><span id="active-chat-title">当前对话</span></button>
+        </div>
       </nav>
       <div class="side-footer">
-        <button id="open-settings" class="nav-button" type="button" aria-haspopup="dialog"><i class="icon icon-sliders" aria-hidden="true"></i><span>模型设置</span></button>
+        <button id="open-settings" class="nav-button" type="button" aria-label="模型设置" title="模型设置" aria-haspopup="dialog"><svg class="icon" aria-hidden="true"><use href="#icon-sliders"></use></svg><span>模型设置</span></button>
       </div>
     </aside>
+    <button id="nav-scrim" class="nav-scrim" type="button" aria-label="关闭导航" aria-controls="sidebar" tabindex="-1"></button>
     <main class="workspace">
-      <header class="topbar"><span class="context-mark" aria-hidden="true"></span><h1 id="page-title">当前对话</h1></header>
+      <header class="topbar">
+        <button id="mobile-menu" class="icon-button" type="button" title="打开导航" aria-label="打开导航" aria-controls="sidebar" aria-expanded="false"><svg class="icon" aria-hidden="true"><use href="#icon-panel"></use></svg></button>
+        <span class="breadcrumb"><svg class="icon" aria-hidden="true"><use href="#icon-folder"></use></svg>个人信息助手</span>
+        <span class="breadcrumb-divider" aria-hidden="true">/</span>
+        <h1 id="page-title">当前对话</h1>
+      </header>
       <p id="status" class="status" role="status"></p>
       <noscript><p class="no-script">请启用浏览器的 JavaScript，以使用对话和本地记录。</p></noscript>
       <section id="chat-view" class="chat-view" aria-label="对话">
-        <div class="thread">
-          <div id="empty-state" class="welcome">
-            <div class="welcome-glyph" aria-hidden="true"><span class="mark"><i></i><i></i></span></div>
-            <h2>想一起读点什么？</h2>
-            <p>放入一段材料，或直接聊聊你关心的问题。</p>
+        <div id="chat-scroll" class="thread" tabindex="0" aria-label="对话内容">
+          <div id="welcome" class="welcome">
+            <div class="welcome-heading"><svg class="welcome-mark" aria-hidden="true"><use href="#hero-mark"></use></svg><h2>DeepSeek Harness</h2><span class="web-edition">网页版</span></div>
           </div>
-          <div id="messages" class="messages" role="log" aria-label="对话消息" aria-live="off"></div>
+          <div id="messages" class="messages chat-column" role="log" aria-label="对话消息" aria-live="off"></div>
         </div>
-        <div class="compose-area">
-          <div class="compose-actions"><button id="save-discussion" class="quiet" type="button" disabled><i class="icon icon-bookmark" aria-hidden="true"></i>整理为记录</button></div>
+        <div class="compose-area composer-dock">
+          <div class="compose-actions"><span class="workspace-label"><svg class="icon" aria-hidden="true"><use href="#icon-folder"></use></svg>个人资料工作区</span>
+            <button id="save-discussion" class="quiet" type="button" disabled><svg class="icon" aria-hidden="true"><use href="#icon-bookmark"></use></svg>整理为记录</button></div>
           <form id="composer" class="composer" autocomplete="off">
             <p id="material-summary" class="material-summary" hidden></p>
             <label class="sr-only" for="question">输入问题或文字材料</label>
             <textarea id="question" rows="2" placeholder="发消息，或粘贴想讨论的文字…" spellcheck="true"></textarea>
             <div class="compose-tools">
-              <button id="open-material" class="tool" type="button" aria-haspopup="dialog"><i class="icon icon-plus" aria-hidden="true"></i>放入材料</button>
-              <button id="model-button" class="tool model-button" type="button" aria-haspopup="dialog"><i class="icon icon-model" aria-hidden="true"></i><span id="model-label">选择模型</span><i class="chevron" aria-hidden="true"></i></button>
-              <button id="send" class="send-button" type="submit" title="发送" aria-label="发送"><i class="icon icon-send" aria-hidden="true"></i></button>
+              <button id="open-material" class="tool material-tool" type="button" title="放入文字材料" aria-label="放入文字材料" aria-haspopup="dialog"><svg class="icon" aria-hidden="true"><use href="#icon-plus"></use></svg><span>材料</span></button>
+              <span class="toolbar-divider" aria-hidden="true"></span>
+              <button id="model-button" class="tool model-button" type="button" aria-haspopup="dialog"><svg class="icon" aria-hidden="true"><use href="#icon-stack"></use></svg><span id="model-label">配置模型</span><svg class="icon" aria-hidden="true"><use href="#icon-chevron"></use></svg></button>
+              <button id="send" class="send-button" type="submit" title="发送" aria-label="发送" disabled><svg class="icon" aria-hidden="true"><use href="#icon-send"></use></svg></button>
               <button id="stop" class="send-button" type="button" title="停止生成" aria-label="停止生成" hidden><i class="stop-mark" aria-hidden="true"></i></button>
             </div>
           </form>
-          <p class="composer-note">对话暂存在此页，需要回看时可保存为记录。</p>
+          <p class="composer-note">对话暂存在此页，保存的记录可在当前浏览器回看。</p>
         </div>
       </section>
       <section id="records-view" class="records-view" aria-labelledby="records-title" hidden>
         <div class="records-inner">
-          <button id="back-to-chat" class="quiet back-button" type="button"><span aria-hidden="true">←</span> 返回对话</button>
+          <button id="back-to-chat" class="quiet back-button" type="button"><svg class="icon" aria-hidden="true"><use href="#icon-back"></use></svg>返回对话</button>
           <h2 id="records-title">我的记录</h2>
           <p class="description">这里显示你保存在当前浏览器的理解记录。</p>
-          <label class="search-box" for="search"><i class="icon icon-search" aria-hidden="true"></i><span class="sr-only">搜索记录</span><input type="search" id="search" placeholder="按关键词查找记录" autocomplete="off"></label>
+          <label class="search-box" for="search"><svg class="icon" aria-hidden="true"><use href="#icon-search"></use></svg><span class="sr-only">搜索记录</span><input type="search" id="search" placeholder="按关键词查找记录" autocomplete="off"></label>
           <div id="records-list" class="records-list" aria-label="记录列表"></div>
         </div>
       </section>
     </main>
   </div>
-
   <dialog id="settings-dialog" aria-labelledby="settings-title">
-    <div class="dialog-content">
-      <header class="dialog-head"><h2 id="settings-title">模型设置</h2><button id="close-settings" class="close-button" type="button" data-close aria-label="关闭模型设置">×</button></header>
-      <p class="description">使用自己的 API Key。费用由所选模型服务商向你的账号计量。</p>
-      <div class="field"><label for="provider">服务商</label><select id="provider"><option value="deepseek">DeepSeek</option><option value="qwen">通义千问（阿里云百炼）</option></select></div>
-      <div class="field"><label for="model">模型 ID</label><input id="model" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"></div>
-      <div class="field"><label for="api-key">API Key</label><input id="api-key" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="输入自己的 API Key" aria-describedby="key-help"><small id="key-help">浏览器将密钥直接发给你选择的模型服务商，本站不经手。密钥仅留在当前页面，刷新或关闭后需要重新填写。</small></div>
-      <div class="receiver"><span>请求地址</span><code id="endpoint"></code></div>
-      <label class="consent" for="consent"><input id="consent" type="checkbox"><span>我同意发送时由浏览器将所附正文、本次问题和当前对话发给上面的模型服务商。</span></label>
-      <p id="settings-status" class="dialog-status" role="status"></p>
-      <footer class="dialog-actions"><button id="disconnect" class="quiet disconnect" type="button">清除当前密钥</button><button id="apply-settings" class="primary" type="button">使用此连接</button></footer>
+    <div class="settings-layout">
+      <aside class="settings-nav" aria-label="模型服务商">
+        <h2 id="settings-title">模型设置</h2>
+        <p class="group-heading">服务商</p>
+        <div class="provider-list">
+          <button id="provider-deepseek" class="provider-choice" type="button" aria-pressed="true"><svg class="provider-mark" aria-hidden="true"><use href="#hero-mark"></use></svg>DeepSeek</button>
+          <button id="provider-qwen" class="provider-choice" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#icon-stack"></use></svg>通义千问</button>
+        </div>
+        <select id="provider" aria-label="服务商" hidden><option value="deepseek">DeepSeek</option><option value="qwen">通义千问（阿里云百炼）</option></select>
+      </aside>
+      <div class="settings-body">
+        <header class="dialog-head"><h3 id="provider-heading">DeepSeek</h3><button id="close-settings" class="close-button" type="button" data-close aria-label="关闭模型设置">×</button></header>
+        <p class="description">使用自己的 API Key，费用由所选模型服务商向你的账号计量。</p>
+        <div class="field"><label for="model">模型 ID</label><input id="model" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"></div>
+        <div class="field"><label for="api-key">API Key</label><input id="api-key" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="输入自己的 API Key" aria-describedby="key-help"><small id="key-help">浏览器将密钥直接发给你选择的模型服务商。密钥仅留在当前页面，刷新或关闭后需要重新填写。</small></div>
+        <div class="receiver"><span>请求地址</span><code id="endpoint"></code></div>
+        <label class="consent" for="consent"><input id="consent" type="checkbox"><span>我同意发送时由浏览器将所附正文、本次问题和当前对话发给上面的模型服务商。</span></label>
+        <p id="settings-status" class="dialog-status" role="status"></p>
+        <footer class="dialog-actions"><button id="disconnect" class="quiet disconnect" type="button">清除当前密钥</button><button id="apply-settings" class="primary" type="button">使用此连接</button></footer>
+      </div>
     </div>
   </dialog>
   <dialog id="material-dialog" aria-labelledby="material-title">

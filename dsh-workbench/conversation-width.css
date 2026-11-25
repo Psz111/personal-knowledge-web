@@ -1,0 +1,15 @@
+#chat-view .wSkVaW_widthHandle { display: none; }
+@media (min-width: 850px) {
+  #chat-view[data-width-controls] { position: relative; }
+  #chat-view[data-width-controls] .chat-column { width: min(100%, var(--dsh-chat-user-width, clamp(680px, 64%, 920px))); }
+  #chat-view[data-width-controls] .composer-dock > * { width: min(100%, calc(var(--dsh-chat-user-width, clamp(680px, 64%, 920px)) + 32px)); }
+  #chat-view:has(#welcome[hidden]) .wSkVaW_widthHandle {
+    --reading-width: var(--dsh-chat-user-width, clamp(680px, calc(var(--dsh-conversation-column-width) * .64), 920px));
+    display: block; position: absolute; top: 0; bottom: 0; z-index: 1; width: 10px; cursor: col-resize; touch-action: none;
+  }
+  #chat-view .wSkVaW_widthHandle[data-side="left"] { right: calc(50% + var(--reading-width) / 2 + 4px); }
+  #chat-view .wSkVaW_widthHandle[data-side="right"] { left: calc(50% + var(--reading-width) / 2 + 4px); }
+  #chat-view .wSkVaW_widthHandle:is(:hover, [data-dragging])::after {
+    content: ""; position: absolute; inset: 4% 4px; border-radius: 2px; background: var(--line);
+  }
+}

@@ -1,12 +1,14 @@
 import { providers, streamReply } from './model.js';
 import { listRecords, putRecord, deleteRecord } from './records.js';
+import { renderMessage, unmountMessage } from './dsh/renderer.js';
+import { installConversationWidthControls } from './dsh-workbench/conversation-width.js';
 
 const el = id => document.getElementById(id);
 const chat = el('chat-view');
 const library = el('records-view');
 const question = el('question');
 const messages = el('messages');
-const thread = messages.parentElement;
+const thread = el('chat-scroll');
 const settings = el('settings-dialog');
 const materialDialog = el('material-dialog');
 const recordDialog = el('record-dialog');
@@ -14,6 +16,8 @@ const provider = el('provider');
 const keyInput = el('api-key');
 const consent = el('consent');
 const recordFields = ['title', 'material', 'source', 'analysis', 'notes'];
+const workbench = document.querySelector('.workbench');
+const narrowScreen = window.matchMedia('(max-width: 700px)');
 
 let connection = null;
 let material = { text: '', source: '' };
@@ -34,6 +38,27 @@ function notice(text = '') {
   el('status').textContent = text;
 }
 
+function updateNavigation() {
+  const expanded = narrowScreen.matches ? workbench.classList.contains('nav-open') : !workbench.classList.contains('rail');
+  workbench.querySelector('aside').inert = narrowScreen.matches && !expanded;
+  workbench.querySelector('main').inert = narrowScreen.matches && expanded;
+  el('sidebar-toggle').setAttribute('aria-expanded', String(expanded));
+  el('mobile-menu').setAttribute('aria-expanded', String(expanded));
+}
+
+function dismissMobileNav() {
+  if (!workbench.classList.contains('nav-open')) return;
+  workbench.classList.remove('nav-open');
+  updateNavigation();
+  if (narrowScreen.matches) el('mobile-menu').focus();
+}
+
+function toggleNavigation() {
+  workbench.classList.toggle(narrowScreen.matches ? 'nav-open' : 'rail');
+  updateNavigation();
+  if (narrowScreen.matches) el(workbench.classList.contains('nav-open') ? 'sidebar-toggle' : 'mobile-menu').focus();
+}
+
 function chatControls() {
   const busy = running !== null;
   el('send').hidden = busy;
@@ -43,16 +68,21 @@ function chatControls() {
   el('open-material').disabled = busy;
   el('open-settings').disabled = busy;
   el('model-button').disabled = busy;
-  el('empty-state').hidden = turns.length > 0;
+  el('welcome').hidden = turns.length > 0;
   el('material-summary').hidden = !material.text;
   el('material-summary').textContent = material.text ? '已附材料 · ' + material.text.slice(0, 50) : '';
   el('model-label').textContent = connection?.model || '配置模型';
+  const title = (material.text || turns[0]?.question || '').trim().split(/\r?\n/)[0].slice(0, 70);
+  el('active-chat-title').textContent = title || '当前对话';
+  el('active-chat').title = title || '当前对话';
 }
 
 function setView(showRecords) {
+  dismissMobileNav();
   chat.hidden = showRecords;
   library.hidden = !showRecords;
   el('page-title').textContent = showRecords ? '我的记录' : '当前对话';
+  el('active-chat').setAttribute('aria-pressed', String(!showRecords));
   el('open-records').setAttribute('aria-pressed', String(showRecords));
   notice();
   if (showRecords) {
@@ -63,6 +93,7 @@ function setView(showRecords) {
 
 function openSettings() {
   if (running) return;
+  dismissMobileNav();
   provider.value = connection?.provider || 'deepseek';
   el('model').value = connection?.model || providers[provider.value].model;
   keyInput.value = '';
@@ -74,6 +105,8 @@ function openSettings() {
 
 function updateRecipient() {
   el('endpoint').textContent = providers[provider.value].endpoint;
+  el('provider-heading').textContent = providers[provider.value].label;
+  for (const id of Object.keys(providers)) el('provider-' + id).setAttribute('aria-pressed', String(id === provider.value));
   keyInput.placeholder = connection?.provider === provider.value ? '已在本页配置，留空可继续使用' : '输入自己的 API Key';
   el('disconnect').hidden = !connection;
 }
@@ -133,6 +166,7 @@ function newChat() {
   turns = [];
   material = { text: '', source: '' };
   question.value = '';
+  for (const body of messages.querySelectorAll('.message-render')) unmountMessage(body);
   messages.replaceChildren();
   setView(false);
   chatControls();
@@ -142,9 +176,10 @@ function newChat() {
 function appendMessage(role, label, value = '') {
   const article = node('article', 'message message-' + role);
   article.append(node('div', 'message-author', label));
-  const body = node('p', 'message-text', value);
+  const body = node('div', 'message-render');
   article.append(body);
   messages.append(article);
+  if (role === 'user') renderMessage(body, { role, text: value }, { sync: true });
   return { article, body };
 }
 
@@ -176,19 +211,21 @@ async function send(event) {
   const hint = node('span', 'message-status', '正在连接…');
   hint.setAttribute('role', 'status');
   article.append(hint);
-  const answerText = document.createTextNode('');
-  body.append(answerText);
-  let thoughtText;
+  let reasoning = '';
   let following = true;
   let frame = 0;
   function trackScroll() {
     following = thread.scrollHeight - thread.clientHeight - thread.scrollTop < 70;
   }
-  function followOutput() {
-    if (!following || frame || chat.hidden) return;
+  function paintAnswer(streaming, interrupted = false) {
+    renderMessage(body, { role: 'assistant', text: turn.answer, reasoning, streaming, interrupted }, { sync: true });
+    if (following && !chat.hidden) thread.scrollTop = thread.scrollHeight;
+  }
+  function queuePaint() {
+    if (frame) return;
     frame = requestAnimationFrame(() => {
       frame = 0;
-      if (following && !chat.hidden) thread.scrollTop = thread.scrollHeight;
+      if (running === controller) paintAnswer(true);
     });
   }
   thread.addEventListener('scroll', trackScroll, { passive: true });
@@ -201,26 +238,18 @@ async function send(event) {
         if (running !== controller) return;
         hint.textContent = '';
         turn.answer += delta;
-        answerText.appendData(delta);
-        followOutput();
+        queuePaint();
       },
       onThinking(delta) {
         if (running !== controller) return;
         hint.textContent = '';
-        if (!thoughtText) {
-          const thoughts = node('details', 'thinking');
-          const content = node('p', 'message-text');
-          thoughtText = document.createTextNode('');
-          content.append(thoughtText);
-          thoughts.append(node('summary', '', '模型思考'), content);
-          article.insertBefore(thoughts, body);
-        }
-        thoughtText.appendData(delta);
-        followOutput();
+        reasoning += delta;
+        queuePaint();
       },
     });
     if (running !== controller) return;
     turn.complete = true;
+    paintAnswer(false);
     hint.className = 'sr-only';
     hint.textContent = '回复已完成。';
     const save = node('button', 'message-save', '保存这条解读');
@@ -230,7 +259,10 @@ async function send(event) {
     if (following && !chat.hidden) thread.scrollTop = thread.scrollHeight;
   } catch (error) {
     if (running !== controller) return;
-    hint.textContent = error.name === 'AbortError' ? '这次回复已停止。' : error.message;
+    const stopped = error.name === 'AbortError';
+    paintAnswer(false, stopped || error.code === 'INCOMPLETE_STREAM');
+    if (stopped) hint.className = 'sr-only';
+    hint.textContent = stopped ? '这次回复已停止。' : error.message;
     if (!question.value) question.value = text;
   } finally {
     thread.removeEventListener('scroll', trackScroll);
@@ -315,10 +347,28 @@ async function refreshRecords() {
 }
 
 el('new-chat').addEventListener('click', newChat);
+el('sidebar-toggle').addEventListener('click', toggleNavigation);
+el('mobile-menu').addEventListener('click', toggleNavigation);
+el('nav-scrim').addEventListener('click', dismissMobileNav);
+narrowScreen.addEventListener('change', () => {
+  dismissMobileNav();
+  updateNavigation();
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') dismissMobileNav();
+});
+el('active-chat').addEventListener('click', () => { setView(false); question.focus(); });
 el('open-records').addEventListener('click', () => setView(true));
 el('back-to-chat').addEventListener('click', () => setView(false));
 el('open-settings').addEventListener('click', openSettings);
 el('model-button').addEventListener('click', openSettings);
+for (const id of Object.keys(providers)) {
+  el('provider-' + id).addEventListener('click', () => {
+    if (provider.value === id) return;
+    provider.value = id;
+    provider.dispatchEvent(new Event('change'));
+  });
+}
 provider.addEventListener('change', () => {
   keyInput.value = '';
   consent.checked = false;
@@ -346,7 +396,7 @@ question.addEventListener('input', chatControls);
 question.addEventListener('keydown', event => {
   if (event.key === 'Enter' && !event.shiftKey && !event.isComposing && event.keyCode !== 229) {
     event.preventDefault();
-    el('composer').requestSubmit();
+    if (!event.repeat) el('composer').requestSubmit();
   }
 });
 el('save-discussion').addEventListener('click', () => draftRecord());
@@ -366,4 +416,6 @@ window.addEventListener('pagehide', () => {
   consent.checked = false;
   chatControls();
 });
+updateNavigation();
 chatControls();
+installConversationWidthControls();
